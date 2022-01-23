@@ -1,0 +1,30 @@
+{
+  "name": "my-todo-list",
+  "version": "1.0.0",
+  "description": "A todo list base project for the MMI course on Node.js and MongoDB.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gIUT-LAVAL-MMI/node-mongo-todolist.git"
+  },
+  "keywords": [
+    "mmi",
+    "node.js",
+    "mongo"
+  ],
+  "author": "Rémi Venant",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IUT-LAVAL-MMI/node-mongo-todolist/issues"
+  },
+  "homepage": "https://github.com/IUT-LAVAL-MMI/node-mongo-todolist#readme",
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "express": "^4.17.2",
+    "mongo": "^0.1.0"
+  }
+}
