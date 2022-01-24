@@ -39,8 +39,8 @@ The API handle a signle data model: the task.
 
 ### REST API endoints documentation
 
-The task JSON model is described in french at [docs/TaskModel.md](docs/TaskModel.md).
-
+The task JSON model, used for MongoDB and the REST API is described in french at [docs/TaskModel.md](docs/TaskModel.md).
+The error JSON model, used for the REST API is described in french at [docs/ErrorModel.md](docs/ErrorModel.md).
 The expected REST API is described in french at [docs/RESTApi.md](docs/RESTApi.md).
 
 ### MongoDB connection information

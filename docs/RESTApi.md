@@ -1,5 +1,7 @@
 # Description de l'API REST de gestion des tâches
 
+Pour tous les services proposés, les erreurs retournées respectent le modèle d'erreur décrit dans [ErrorModel.md](ErrorModel.md) 
+
 ## GET /api/tasks
 
 - Retourne la liste des tâches, triées par deadline croissante puis par date de création décroissante. N'inclue pas les détails d'une tâche.

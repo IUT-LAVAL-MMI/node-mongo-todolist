@@ -1,5 +1,7 @@
 # Modèle de document d'une tâche
 
+Ce modèle est celui des documents de la base de données, mais également celui utilisé en JSON pour l'interaction entre l'API REST et les clients.
+
 ## Exemple de document JSON
 ```
 {
