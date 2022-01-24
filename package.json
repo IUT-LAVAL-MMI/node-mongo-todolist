@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@gIUT-LAVAL-MMI/node-mongo-todolist.git"
+    "url": "git+https://github.com/IUT-LAVAL-MMI/node-mongo-todolist.git"
   },
   "keywords": [
     "mmi",
