@@ -1,10 +1,10 @@
 # Description de l'API REST de gestion des tâches
 
-Pour tous les services proposés, les erreurs retournées respectent le modèle d'erreur décrit dans [ErrorModel.md](ErrorModel.md) 
+Pour tous les services proposés, les erreurs retournées respectent le modèle d'erreur décrit dans [ErrorModel.md](ErrorModel.md)
 
 ## GET /api/tasks
 
-- Retourne la liste des tâches, triées par deadline croissante puis par date de création décroissante. N'inclue pas les détails d'une tâche.
+- Retourne la liste des tâches, triées par date de création décroissante. N'inclue pas les détails d'une tâche.
 - Paramètres de requête :
   - *achieved*: booléen, unique & optionnel, valeur par défaut : aucun. Si true, inclue dans les résultat uniquement les tâches terminée. Si false, inclue dans les résultat uniquement les tâche non terminée ;
   - *lateOnly*: booléen, unique & optionnel, valeur par défaut : false. Si true, n'inclue dans les résultat que les tâches en retard : tâches dont la date de fin (deadline) est antérieur à la date du jour ;
