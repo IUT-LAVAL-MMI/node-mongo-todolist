@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { serverHostname, serverPort } = require('./config');
-const { testConnexion } = require('./mongo/mongoConnection');
-const { RestException } = require('./mongo/RestException');
+const { RestException } = require('./utils/RestException');
 const { tasksRouter } = require('./routers/tasksRouter');
+const { testConnexion } = require('./mongo/mongoConnection');
 
 // Création d'une application express
 const app = express();

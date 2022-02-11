@@ -1,6 +1,6 @@
 const { ObjectId } = require('mongodb');
 const { getDatabase } = require('./mongoConnection');
-const { RestException } = require('./RestException');
+const { RestException } = require('../utils/RestException');
 
 const COL_NAME = 'tasks';
 
