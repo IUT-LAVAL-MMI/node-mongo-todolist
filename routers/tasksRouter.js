@@ -24,6 +24,17 @@ router.post('/tasks', (req, rep, next) => {
     .catch((error) => next(error));
 })
 
+// Vérification optimisée de l'existence d'une tâche par son id
+// A TOUJOURS PLACER AVANT UN get SUR LA MÊME URL (Sinon un traitement par défaut pour head
+// sera mis en place par express)
+router.head('/tasks/:id', (req, res, next) => {
+  const { id } = req.params;
+  console.log('in head');
+  taskMgmt.checkTaskExists(id)
+    .then(() => res.end()) // Ne revoit aucune donnée avec code 200 si la tâche existe
+    .catch((error) => next(error)); // 404 si la tache existe ou autre
+});
+
 // Récupération d'une tâche par son id
 router.get('/tasks/:id', (req, rep, next) => {
   const { id } = req.params;
@@ -45,7 +56,7 @@ router.patch('/tasks/:id', (req, rep, next) => {
 router.delete('/tasks/:id', (req, rep, next) => {
   const { id } = req.params;
   taskMgmt.deleteTask(id)
-    .then(() => rep.status(204).end())
+    .then(() => rep.status(204).end()) // Ne revoit aucune donnée avec un code 204
     .catch((error) => next(error));
 });
 

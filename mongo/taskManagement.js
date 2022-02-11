@@ -226,6 +226,10 @@ async function updateTask(idTask, { author, title, details, creation, deadline, 
  * correspond à l'id
  */
 async function deleteTask(idTask) {
+  // Précondition : l'id de la tâche doit être renseigné
+  if (!idTask) {
+    throw new RestException('Identifiant de tâche invalide.', 400);
+  }
   const db = await getDatabase();
   // Demande de suppression d'un document dont l'id correspond et récupération du nombre de
   // documents supprimés (1 ou 0 donc)
@@ -238,10 +242,35 @@ async function deleteTask(idTask) {
   }
 }
 
+/**
+ * Vérification de l'existence d'un document
+ * @param  {[String]} idTask Identifiant de la tâche
+ * @return {[undefined]} ne retourne rien
+ */
+async function checkTaskExists(idTask) {
+  // Précondition : l'id de la tâche doit être renseigné
+  if (!idTask) {
+    throw new RestException('Identifiant de tâche invalide.', 400);
+  }
+  const db = await getDatabase();
+  // On récupère le premier document venu, en ne projetant que l'id pour éviter de rappatrier
+  // toute les données
+  const task = await db.collection(COL_NAME)
+    .findOne({ _id: new ObjectId(idTask) }, {
+      projection: {
+        _id: 1,
+      }
+    });
+  if (task == null) {
+    throw new RestError(`Tâche d'id ${idTask} inconnue.`, 'Ressource inconnue', 404);
+  }
+}
+
 module.exports = {
   getTasks,
   getTask,
   createTask,
   updateTask,
-  deleteTask
+  deleteTask,
+  checkTaskExists
 };
