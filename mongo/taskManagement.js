@@ -266,11 +266,63 @@ async function checkTaskExists(idTask) {
   }
 }
 
+/**
+ * Comptage asynchrone du nombre de tâche par jour/mois/année et par tâche achevé ou non
+ * @return {[Array<Stat>]} tableau de nombre de tâches par critères d'aggrégation
+ */
+async function countAchievedAndOnGoingTasksByDays() {
+  //Création du pipeline d'aggregation
+  const pipeline = [{
+      // Etage 1 : groupement des documents
+      $group: {
+        _id: { // On regroupe par année, mois, jour et état d'achevement (~SQL : GROUP BY)
+          year: { $year: '$creation' }, // année extraite de la date de création
+          month: { $month: '$creation' }, // mois extrait de la date de création
+          day: { $dayOfMonth: '$creation' }, // jour extrait de la date de création
+          achieved: { // Etat d'achevement calculé par condition (~SQL : CASE WHEN...)
+            $cond: {
+              // Si le champ achieved du doc. est null : false, sinon true
+              if: { $eq: ['$achieved', null] },
+              then: false,
+              else: true,
+            }
+          }
+        },
+        nbTasks: { $sum: 1 }, // On calcul par regroupement le nombre de documents
+        // pour chaque doc, on a la valeur 1 et on fait la somme des 1
+      }
+    },
+    // Etage 2 : projection : on retourne des documents ne comprenant que des champs date
+    // (reconstruite sur annee, mois et jour) et nombre de tâches
+    {
+      $project: {
+        _id: 0,
+        date: { $dateFromParts: { 'year': '$_id.year', 'month': '$_id.month', 'day': '$_id.day' } },
+        achieved: '$_id.achieved',
+        nbTasks: 1,
+      }
+    },
+    // Etage 3 : trie sur date decroissante puis sur achieved croissant (false puis true)
+    {
+      $sort: {
+        'date': -1,
+        'achieved': 1
+      }
+    },
+
+  ];
+
+  const db = await getDatabase();
+  // Calcul de l'aggregation
+  return await db.collection(COL_NAME).aggregate(pipeline).toArray();
+}
+
 module.exports = {
   getTasks,
   getTask,
   createTask,
   updateTask,
   deleteTask,
-  checkTaskExists
+  checkTaskExists,
+  countAchievedAndOnGoingTasksByDays
 };

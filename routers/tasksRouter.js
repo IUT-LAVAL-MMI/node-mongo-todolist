@@ -20,7 +20,7 @@ router.get('/tasks', (req, rep, next) => {
 router.post('/tasks', (req, rep, next) => {
   const taskToCreate = req.body;
   taskMgmt.createTask(taskToCreate)
-    .then((task) => ep.json(task))
+    .then((task) => rep.json(task))
     .catch((error) => next(error));
 })
 
@@ -57,6 +57,13 @@ router.delete('/tasks/:id', (req, rep, next) => {
   const { id } = req.params;
   taskMgmt.deleteTask(id)
     .then(() => rep.status(204).end()) // Ne revoit aucune donnée avec un code 204
+    .catch((error) => next(error));
+});
+
+// Calcul de statistique : nombre de tâches par jour et par état d'achèvement
+router.get('/tasks-stats/tasksByDay', (req, res, next) => {
+  taskMgmt.countAchievedAndOnGoingTasksByDays()
+    .then((stats) => res.json(stats))
     .catch((error) => next(error));
 });
 
