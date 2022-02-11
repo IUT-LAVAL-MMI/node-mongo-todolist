@@ -3,26 +3,7 @@ const bodyParser = require('body-parser');
 const { serverHostname, serverPort } = require('./config');
 const { testConnexion } = require('./mongo/mongoConnection');
 const taskMgmt = require('./mongo/taskManagement');
-
-function stringToBoolean(str) {
-  if (!str){
-    return null;
-  }
-  return str.toLowerCase() === 'true' ? true : false;
-}
-
-function enforceArray(value) {
-  //Si pas value -> null
-  if (!value) {
-    return null;
-  }
-  //Si value est une chaine : tableau contenant cette chaine
-  if (typeof(value) === 'string') {
-    return [value];
-  }
-  //Si value est un tableau : on ne touche à rien
-  return value;
-}
+const { stringToBoolean, enforceArray } = require('./utils/queryParamsUtils');
 
 // Création d'une application express
 const app = express();
