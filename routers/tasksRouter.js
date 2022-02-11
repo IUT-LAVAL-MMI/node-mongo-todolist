@@ -32,6 +32,15 @@ router.get('/tasks/:id', (req, rep, next) => {
     .catch((error) => next(error));
 });
 
+// Mise à jour d'une tâche par son id
+router.patch('/tasks/:id', (req, rep, next) => {
+  const { id } = req.params;
+  const update = req.body;
+  taskMgmt.updateTask(id, update)
+    .then((task) => rep.json(task))
+    .catch((error) => next(error));
+})
+
 // Suppression d'une tâche par son id
 router.delete('/tasks/:id', (req, rep, next) => {
   const { id } = req.params;

@@ -131,8 +131,91 @@ async function createTask({
   return await getTask(insertedId);
 }
 
-async function updateTask() {
-  throw new Error('Not implemented');
+/**
+ * Mise à jour partielle et asynchrone d'une tâche. Ne met à jour que les champs renseignés
+ * @param  {[String]} idTask Identifiant de la tâche
+ * @param  {[String|null|undefined]} author Auteur
+ * @param  {[type]} title                  [description]
+ * @param  {[type]} details                [description]
+ * @param  {[type]} creation               [description]
+ * @param  {[type]} deadline               [description]
+ * @param  {[type]} achieved               [description]
+ * @return {[type]}          [description]
+ */
+async function updateTask(idTask, { author, title, details, creation, deadline, achieved }) {
+  // Précondition : l'id de la tâche doit être renseigné
+  if (!idTask) {
+    throw new RestException('Identifiant de tâche invalide.', 400);
+  }
+  // Précondition : auteur, titre ou date de création ne peuvent pas être null
+  if (author === null) {
+    throw new RestException("Impossible de supprimer l'auteur d'une tâche.", 400);
+  }
+  if (title === null) {
+    throw new RestException("Impossible de supprimer le titre d'une tâche.", 400);
+  }
+  if (creation === null) {
+    throw new RestException("Impossible de supprimer la date de création d'une tâche.", 400);
+  }
+
+  const updateRequest = {}; // Objet de requête de mise à jour
+  // préparation de la mise à jour de l'auteur, titre et détail si fournis
+  if (author) {
+    updateRequest['author'] = author;
+  }
+  if (title) {
+    updateRequest['title'] = title;
+  }
+  if (details || details === null) { // détails peut être null également
+    updateRequest['details'] = details;
+  }
+  // préparation de la mise à jour de la date de création si fournie avec vérification de
+  // sa validité (conversion en Date si String fournie)
+  if (creation) {
+    updateRequired = true;
+    const creationDate = new Date(creation);
+    if (isNaN(creationDate)) {
+      throw new RestException('Date de création de la tâche invalide.', 400);
+    }
+    updateRequest['creation'] = creationDate;
+  }
+  // préparation de la mise à jour de la deadline si fournie avec vérification de
+  // sa validité (conversion en Date si String fournie)
+  if (deadline || deadline === null) {
+    const deadlineDate = deadline !== null ? new Date(deadline) : null;
+    if (isNaN(deadlineDate)) {
+      throw new RestException('Deadline de la tâche invalide.', 400);
+    }
+    updateRequest['deadline'] = deadlineDate;
+  }
+  // préparation de la mise à jour de la achieved si fournie avec vérification de
+  // sa validité (conversion en Date si String fournie)
+  if (achieved || achieved === null) {
+    const achievedDate = achieved !== null ? new Date(achieved) : null;
+    if (isNaN(achievedDate)) {
+      throw new RestException("Date d'âchevement de la tâche invalide.", 400);
+    }
+    updateRequest['achieved'] = achievedDate;
+  }
+
+  // Si aucun mise à jour n'est requise, on se contente de renvoyer la tâche contenue en base
+  if (Object.getOwnPropertyNames(updateRequest).length === 0) {
+    return getTask(idTask);
+  }
+
+  const db = await getDatabase();
+  // Mise à jour au maximum d'un document dont l'id correspond et récupération du nombre de
+  // documents correspondant à la requete (donc 1 ou 0)
+  // On n'utilise pas updateCount (le nb de document effectivement mis à jour) car il
+  // se peut que la requête de mise à jour ne contienne que des valeurs qui soient déja celle
+  // du document (et donc celui-ci ne sera pas mis à jour)
+  const { matchedCount } = await db.collection(COL_NAME).updateOne({ _id: new ObjectId(idTask) }, { '$set': updateRequest });
+  // Vérification du nombre de document qui ont pu être mis à jour
+  if (matchedCount === 0) {
+    throw new RestException(`Tâche d'id ${idTask} inconnue.`, 404);
+  }
+  // Retourne la tâche mise à jour
+  return getTask(idTask);
 }
 
 /**
@@ -149,7 +232,7 @@ async function deleteTask(idTask) {
   const { deletedCount } = await db.collection(COL_NAME).deleteOne({
     _id: new ObjectId(idTask)
   });
-  // Vérification du nombre document supprimé
+  // Vérification du nombre de documents supprimés
   if (deletedCount === 0) {
     throw new RestException(`Aucune tâche correspondant à l'id ${idTask}.`, 404);
   }
