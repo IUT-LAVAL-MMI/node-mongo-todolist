@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { serverHostname, serverPort } = require('./config');
 const { testConnexion } = require('./mongo/mongoConnection');
+const { RestException } = require('./mongo/RestException');
 const { tasksRouter } = require('./routers/tasksRouter');
 
 // Création d'une application express
@@ -20,6 +21,12 @@ ROUTES
  */
 // Ajout du routeur de gestion de tâche avec /api comme prefixe d'url
 app.use('/api', tasksRouter);
+
+//Pour toute route inconnu : levée d'une exception
+app.use(function(req, res) {
+  throw new RestException(`Methode ${req.method} et/ou chemin ${req.url} inconnu.`, 404);
+});
+
 
 /*
 GESTION DES ERREURS
