@@ -18,7 +18,8 @@ app.use(bodyParser.json());
 /*
 ROUTES
  */
-app.use(tasksRouter);
+// Ajout du routeur de gestion de tâche avec /api comme prefixe d'url
+app.use('/api', tasksRouter);
 
 /*
 GESTION DES ERREURS
