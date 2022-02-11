@@ -126,7 +126,7 @@ async function createTask({
   }
   const db = await getDatabase();
   // Insertion de la tâche en base de donnée et récupération de l'id du document nouvellement créé
-  const { insertedId } = await db.collection(TASK_COLLECTION_NAME).insertOne(newTask);
+  const { insertedId } = await db.collection(COL_NAME).insertOne(newTask);
   // Retourne la tâche nouvellement créée
   return await getTask(insertedId);
 }
