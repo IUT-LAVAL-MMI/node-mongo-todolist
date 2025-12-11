@@ -28,7 +28,7 @@ function enforceArray(value) {
   return value;
 }
 
-module.exports = {
+export {
   stringToBoolean,
   enforceArray,
 };

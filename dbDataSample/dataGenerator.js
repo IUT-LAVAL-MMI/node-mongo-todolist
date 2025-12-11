@@ -20,11 +20,11 @@ const TITLES = [
 ];
 
 const DETAILS = [
-  "pensée à prendre jeu de clé",
+  "Penser à prendre jeu de clé",
   "Ne pas oublier la QPC déposée",
   null,
   null,
-  "Pensée à prendre des molly",
+  "Penser à prendre des molly",
 ];
 
 const AUTHORS = [

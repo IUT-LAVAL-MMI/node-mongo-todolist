@@ -1,20 +1,22 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const { serverHostname, serverPort } = require('./config');
-const { RestException } = require('./utils/RestException');
-const { tasksRouter } = require('./routers/tasksRouter');
-const { testConnexion } = require('./mongo/mongoConnection');
+import express from 'express';
+import 'dotenv/config';
+import { RestException } from './utils/RestException.js';
+import { tasksRouter } from './routers/tasksRouter.js';
+import { testConnection } from './mongo/mongoConnection.js';
 
 // Création d'une application express
 const app = express();
 // Utilise un middleware pour utiliser la bib. qs pour décoder les querystring, permettant
 // l'utilisation de syntaxes enrichies (json-like comme des tableaux etc.)
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(express.urlencoded());
 // Utilise un middleware pour décoder automatiquement les corps de requêtes en JSON lorsque
 // l'en-tête Content-type est application/json
-app.use(bodyParser.json());
+app.use(express.json());
+
+const listen = {
+  hostname: process.env.EXPRESS_HOSTNAME,
+  port: process.env.EXPRESS_PORT
+}
 
 /*
 ROUTES
@@ -45,11 +47,11 @@ app.use((err, req, rep, next) => {
 })
 
 
-// Mise en écoute du serveur de l'application après vérification que la connexion à la BD Mongo
+// Mise en écoute du serveur de l'application après vérification que la Connection à la BD Mongo
 // soit effective
-testConnexion().then(() => {
-  app.listen(serverPort, serverHostname, () => {
-    console.log(`Server ready to handle requests on interface ${serverHostname} and port ${serverPort}.`);
+testConnection().then(() => {
+  app.listen(listen.port, listen.hostname, () => {
+    console.log(`Server ready to handle requests on interface ${listen.hostname} and port ${listen.port}.`);
   });
 }, (e) => {
   console.warn('Impossible de se connecter à la bd mongo: ' + e.message);

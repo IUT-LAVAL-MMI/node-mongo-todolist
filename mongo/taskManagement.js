@@ -1,6 +1,6 @@
-const { ObjectId } = require('mongodb');
-const { getDatabase } = require('./mongoConnection');
-const { RestException } = require('../utils/RestException');
+import { ObjectId } from 'mongodb';
+import { getDatabase } from './mongoConnection.js';
+import { RestException } from '../utils/RestException.js';
 
 const COL_NAME = 'tasks';
 
@@ -317,7 +317,7 @@ async function countAchievedAndOnGoingTasksByDays() {
   return await db.collection(COL_NAME).aggregate(pipeline).toArray();
 }
 
-module.exports = {
+export default {
   getTasks,
   getTask,
   createTask,

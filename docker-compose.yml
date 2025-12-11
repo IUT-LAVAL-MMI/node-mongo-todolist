@@ -1,23 +1,16 @@
-version: '3.4'
-
 services:
   mytodolist-mongo:
-    image: mongo:4.2
+    image: mongo:8.2.2
+    env_file: ".env"
     environment:
-      - MONGO_INITDB_DATABASE=todolistdb
-      - MONGO_INITDB_ROOT_USERNAME=mongouser
-      - MONGO_INITDB_ROOT_PASSWORD=ajdshfez2sd
+      - MONGO_INITDB_DATABASE=${MONGO_DB}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PWD}
     volumes:
       - ./dbDataSample:/docker-entrypoint-initdb.d:ro
-      - mongostorage:/data/db
+      - mongovolume:/data/db
     ports:
-      - 127.0.0.1:27017:27017
-    #networks:
-    #    mytodolistnet:
+      - 27017:27017
     restart: always
-
 volumes:
-  mongostorage:
-
-#networks:
-#   mytodolistnet:
+  mongovolume:
