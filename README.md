@@ -7,6 +7,10 @@
 - docker
 - docker compose
 
+## Setup the environment
+
+Clone [.env.example](.env.example) file and rename it as `.env`, then tweak it to your needs.
+
 ## Launching the MongoDB test database
 
 In the project directory, execute the following command :
