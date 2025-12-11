@@ -5,6 +5,4 @@ class RestException extends Error {
   }
 }
 
-module.exports = {
-  RestException
-};
+export { RestException };

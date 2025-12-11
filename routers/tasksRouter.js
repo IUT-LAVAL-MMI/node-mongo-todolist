@@ -1,6 +1,6 @@
-const express = require('express');
-const taskMgmt = require('../mongo/taskManagement');
-const { stringToBoolean, enforceArray } = require('../utils/queryParamsUtils');
+import express from 'express';
+import taskMgmt from '../mongo/taskManagement.js';
+import { stringToBoolean, enforceArray } from '../utils/queryParamsUtils.js';
 
 // Création d'un routeur pour gérer les routes de tâches
 const router = express.Router();
@@ -67,6 +67,4 @@ router.get('/tasks-stats/tasksByDay', (req, res, next) => {
     .catch((error) => next(error));
 });
 
-module.exports = {
-  tasksRouter: router,
-};
+export { router as tasksRouter };
